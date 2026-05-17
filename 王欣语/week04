@@ -1,0 +1,125 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+#Transformer编码器层流程：输入 → 多头注意力 → 残差相加 + 层归一化 → 前馈网络 → 再残差相加 + 层归一化
+#超参数设置
+batch_size = 2
+seq_len = 3
+d_embed = 64
+
+x = torch.randn(batch_size, seq_len, d_embed)
+print("输入形状1",x.shape)
+
+class MutiHeadAttention(nn.Module):
+    def __init__(self,d_embed,n_heads ):
+        super().__init__()
+        self.d_embed = d_embed
+        self.n_heads  = n_heads 
+        #每个头所分到的维度
+        self.d_k = d_embed // n_heads 
+
+        #三个线性层，映射成K,Q,V
+        self.w_q = nn.Linear(d_embed,d_embed)
+        self.w_k = nn.Linear(d_embed,d_embed)
+        self.w_v = nn.Linear(d_embed,d_embed)
+
+        #拼接输出的线性层
+        self.out = nn.Linear(d_embed,d_embed)
+    
+    #拆分多头
+    def split_heads(self,x):
+        batch,seq_len,d_embed = x.shape
+        return x.view(batch,seq_len,self.n_heads ,self.d_k).transpose(1,2)
+    
+    #前向计算
+    def forward(self,x):
+        batch,seq_len,d_embed = x.shape
+        #1.生成Q,K,V
+        q = self.w_q(x)
+        k = self.w_k(x)
+        v = self.w_v(x)
+
+        #2.拆成多头
+        q = self.split_heads(q)
+        k = self.split_heads(k)
+        v = self.split_heads(v)
+
+        #3.计算注意力分数
+        #torch.matmul(q, k.transpose(-2, -1))-----Q 和 K 的转置相乘，算出每个词和其他词的关联相似度
+        #torch.sqrt(torch.tensor(self.d_k))-----除以根号维度，防止数值太大，softmax 之后分布更合理，训练更稳。
+        attn_score = torch.matmul(q, k.transpose(-2, -1))/ torch.sqrt(torch.tensor(self.d_k))
+
+        #4.归一化，变成权重概念
+        attn_wight = F.softmax(attn_score,dim=-1)
+
+        #5.权重乘V，得到注意力输出
+        attn_out = torch.matmul(attn_wight,v)
+
+        #6.把多头位置换回原来的维度，用于合并
+        attn_out = attn_out.transpose(1,2).contiguous()
+
+        #7.把n_heads和d_k合并成d_embed
+        attn_out = attn_out.view(batch,seq_len,d_embed)
+
+        #8.最后过线性层融合
+        attn_out = self.out(attn_out)
+        return attn_out
+
+class FeedForward(nn.Module):
+    def __init__(self,d_embed,hidden_dim):
+        super().__init__()
+        #两层线性层
+        self.fc1 = nn.Linear(d_embed,hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim,d_embed)
+
+    def forward(self,x):
+        #1.过第一层线性层--升维
+        x = self.fc1(x)
+        #2.过ReLU激活函数
+        x = F.relu(x)
+        #3.过第二层线性层--降维
+        x = self.fc2(x)
+        return x
+
+class TransformerEncoderLayer(nn.Module):
+    def __init__(self,d_embed,n_heads,hidden_dim):
+        super().__init__()
+        #1.多头注意力
+        self.attn = MutiHeadAttention(d_embed,n_heads)
+        #2.前馈网络
+        self.ffn = FeedForward(d_embed,hidden_dim)
+        #3.两个层归一化（两次Add&Norm）
+        self.norm1 = nn.LayerNorm(d_embed)
+        self.norm2 = nn.LayerNorm(d_embed)
+    
+    def forward(self,x):
+        #第一部分:多头注意力+残差+归一化
+        attn_out = self.attn(x)
+        x = self.norm1(x + attn_out)
+
+        #第二部分：前馈网络+残差+归一化
+        ffn_out = self.ffn(x)
+        x = self.norm2(x + ffn_out)
+
+        return x
+
+# ---------------------- 测试运行 ----------------------
+if __name__ == "__main__":
+    #超参数
+    batch_size = 2
+    seq_len = 3
+    d_embed = 64
+    n_heads = 8
+    hidden_dim = d_embed * 4
+
+    #构造输入
+    x = torch.randn(batch_size, seq_len, d_embed)
+    print("输入形状2",x.shape)
+
+    #创建Transformer编码器层
+    transformer_layer  = TransformerEncoderLayer(d_embed,n_heads,hidden_dim)
+    
+    #前向计算
+    out = transformer_layer (x)
+    print("输出形状",out.shape)
