@@ -1,0 +1,22 @@
+[
+  {
+    "method": "bert_crf",
+    "precision": 0.9318663838812301,
+    "recall": 0.9121577786427922,
+    "f1": 0.921906760212445,
+    "extraction_errors": 0,
+    "api_errors": 0,
+    "invalid_llm_items": 0,
+    "invalid_bio_orders": 140
+  },
+  {
+    "method": "llm_fewshot",
+    "precision": 0.7745960646296592,
+    "recall": 0.6282600233553912,
+    "f1": 0.6937956727324832,
+    "extraction_errors": 0,
+    "api_errors": 0,
+    "invalid_llm_items": 55,
+    "invalid_bio_orders": 0
+  }
+]

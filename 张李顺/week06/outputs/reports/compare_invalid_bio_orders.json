@@ -1,0 +1,57 @@
+{
+  "bert_crf": {
+    "total": 140,
+    "definition": "START/O -> I-X, or B/I-X -> I-Y when X != Y",
+    "categories": {
+      "START_TO_I": {
+        "description": "Sequence starts with I-X: START -> I-X.",
+        "total": 0,
+        "combinations": {}
+      },
+      "O_TO_I": {
+        "description": "Outside tag followed by I-X: O -> I-X.",
+        "total": 94,
+        "combinations": {
+          "O->I-ORG": 58,
+          "O->I-LOC": 29,
+          "O->I-PER": 7
+        }
+      },
+      "TYPE_TO_WRONG_I": {
+        "description": "Entity type switches into I-Y without B-Y: B/I-X -> I-Y where X != Y.",
+        "total": 46,
+        "combinations": {
+          "I-LOC->I-ORG": 16,
+          "I-ORG->I-LOC": 13,
+          "B-LOC->I-ORG": 11,
+          "B-PER->I-ORG": 2,
+          "B-LOC->I-PER": 1,
+          "B-ORG->I-LOC": 1,
+          "I-ORG->I-PER": 1,
+          "I-PER->I-LOC": 1
+        }
+      }
+    }
+  },
+  "llm_fewshot": {
+    "total": 0,
+    "definition": "START/O -> I-X, or B/I-X -> I-Y when X != Y",
+    "categories": {
+      "START_TO_I": {
+        "description": "Sequence starts with I-X: START -> I-X.",
+        "total": 0,
+        "combinations": {}
+      },
+      "O_TO_I": {
+        "description": "Outside tag followed by I-X: O -> I-X.",
+        "total": 0,
+        "combinations": {}
+      },
+      "TYPE_TO_WRONG_I": {
+        "description": "Entity type switches into I-Y without B-Y: B/I-X -> I-Y where X != Y.",
+        "total": 0,
+        "combinations": {}
+      }
+    }
+  }
+}

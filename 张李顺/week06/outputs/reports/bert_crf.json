@@ -1,0 +1,53 @@
+{
+  "method": "bert_crf",
+  "overall": {
+    "precision": 0.9318663838812301,
+    "recall": 0.9121577786427922,
+    "f1": 0.921906760212445,
+    "tp": 7030,
+    "pred": 7544,
+    "gold": 7707
+  },
+  "per_type": {
+    "LOC": {
+      "precision": 0.9405204460966543,
+      "recall": 0.8991252050300711,
+      "f1": 0.9193570929419986,
+      "tp": 3289,
+      "pred": 3497,
+      "gold": 3658
+    },
+    "ORG": {
+      "precision": 0.8837837837837837,
+      "recall": 0.8979405034324943,
+      "f1": 0.890805902383655,
+      "tp": 1962,
+      "pred": 2220,
+      "gold": 2185
+    },
+    "PER": {
+      "precision": 0.9737274220032841,
+      "recall": 0.9543991416309013,
+      "f1": 0.9639664047683555,
+      "tp": 1779,
+      "pred": 1827,
+      "gold": 1864
+    }
+  },
+  "invalid_bio_order_definition": "START/O -> I-X, or B/I-X -> I-Y when X != Y",
+  "invalid_bio_order_combinations": {
+    "O->I-LOC": 29,
+    "I-LOC->I-ORG": 16,
+    "O->I-ORG": 58,
+    "B-LOC->I-ORG": 11,
+    "I-ORG->I-LOC": 13,
+    "B-LOC->I-PER": 1,
+    "I-PER->I-LOC": 1,
+    "B-PER->I-ORG": 2,
+    "O->I-PER": 7,
+    "B-ORG->I-LOC": 1,
+    "I-ORG->I-PER": 1
+  },
+  "extraction_errors": 0,
+  "invalid_llm_items": 0
+}

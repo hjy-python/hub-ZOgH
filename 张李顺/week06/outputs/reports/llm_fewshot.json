@@ -1,0 +1,55 @@
+{
+  "method": "llm_fewshot",
+  "overall": {
+    "precision": 0.7745960646296592,
+    "recall": 0.6282600233553912,
+    "f1": 0.6937956727324832,
+    "tp": 4842,
+    "pred": 6251,
+    "gold": 7707
+  },
+  "per_type": {
+    "LOC": {
+      "precision": 0.7539035980991174,
+      "recall": 0.6071623838162931,
+      "f1": 0.6726226529376136,
+      "tp": 2221,
+      "pred": 2946,
+      "gold": 3658
+    },
+    "ORG": {
+      "precision": 0.6969072164948453,
+      "recall": 0.4640732265446224,
+      "f1": 0.5571428571428572,
+      "tp": 1014,
+      "pred": 1455,
+      "gold": 2185
+    },
+    "PER": {
+      "precision": 0.8686486486486487,
+      "recall": 0.8621244635193133,
+      "f1": 0.8653742595584275,
+      "tp": 1607,
+      "pred": 1850,
+      "gold": 1864
+    }
+  },
+  "invalid_bio_order_definition": "START/O -> I-X, or B/I-X -> I-Y when X != Y",
+  "invalid_bio_order_combinations": {},
+  "extraction_errors": 0,
+  "invalid_llm_items": 55,
+  "api_errors": 0,
+  "concurrency": {
+    "max_workers": 2500,
+    "official_model_concurrency_limit": 2500,
+    "requests_per_minute": 0,
+    "retry_times": 5,
+    "retry_statuses": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "length": {
+    "train": {
+      "samples": 20864,
+      "max_char_len": 574,
+      "max_token_len": 576
+    },
+    "validation": {
+      "samples": 2318,
+      "max_char_len": 568,
+      "max_token_len": 570
+    },
+    "test": {
+      "samples": 4636,
+      "max_char_len": 577,
+      "max_token_len": 579
+    }
+  },
+  "entity_distribution": {
+    "train": {
+      "LOC": 16571,
+      "PER": 8144,
+      "ORG": 9277
+    },
+    "test": {
+      "LOC": 3658,
+      "PER": 1864,
+      "ORG": 2185
+    }
+  }
+}
